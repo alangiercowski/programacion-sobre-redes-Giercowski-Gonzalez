@@ -5,15 +5,15 @@ export class video{
     titulo: string;
     duracion: string;
     miniatura: string;
-    listaVisitas: vista[]
+    listaVistas: Array<vista>;
     usuario: string;
 
-    constructor(id: number, titulo: string, duracion: string, miniatura: string, listaVisita: vista[], usuario: string){
+    constructor(id: number, titulo: string, duracion: string, miniatura: string, listaVista: Array<vista>, usuario: string){
         this.id = id;
         this.duracion = duracion;
         this.miniatura = miniatura;
         this.titulo = titulo;
-        this.listaVisitas = listaVisita
+        this.listaVistas = listaVista
         this.usuario = usuario
     }
     
