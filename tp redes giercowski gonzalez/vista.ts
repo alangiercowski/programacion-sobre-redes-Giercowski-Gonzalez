@@ -1,11 +1,11 @@
 export class vista{
     idVisita: number;
     idVideo: number;
-    duracion: string; //horaActual-horaAbreVideo
-    ubicacion: string; // ver con el profe, obtener coords?
+    duracion: number; 
+    ubicacion: string;
     fecha: string;
 
-    constructor(id: number, idVideo: number, duracion: string, ubicacion: string, fecha: string){
+    constructor(id: number, idVideo: number, duracion: number, ubicacion: string, fecha: string){
         this.idVisita = id;
         this.idVideo = idVideo;
         this.duracion = duracion;

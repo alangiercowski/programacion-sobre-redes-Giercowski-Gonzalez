@@ -1,0 +1,37 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title" : "tp redes giercowski gonzalez",
+        "description" : "API RESTFULL con swagger",
+        "license":{
+            "name": "MIT",
+            "url": "https://opensource.org/licenses.MIT"
+        }
+    },
+    "host" : "localhost:1814",
+    "basePath" : "",
+    "tags" : {
+        "name" : "Vistas",
+        "description" : "API para manejar videos y sus vistas"
+    },
+    "consumes" : ["application/json"],
+    "produces" : ["application/json"],
+    "definitions": {
+        "vista": {
+            "idVista" : "number",
+            "idVideo" : "number",
+            "duracion" : "number",
+            "ubicacion" : "string",
+            "fecha" : "string"
+        },
+        "video":{
+            "id": "number",
+            "titulo": "string",
+            "duracion": "Number",
+            "miniatura": "string",
+            "listaVistas": "Array<vista>",
+            "usuario": "string"
+        }
+    }
+}
