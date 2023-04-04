@@ -7,7 +7,7 @@
         },
     "servers": [
     {
-        "url": "http://localhost:1814"
+        "url": "http://localhost:1815"
     }
     ],
     "paths": {
@@ -47,187 +47,52 @@
                             }
                         }
                     }
-                },
-                "post": {
-                    "summary": "Realizar vista",
-                    "description": "Agrega una vista al video indicado",
-                    "parameters" : [{
-                        "name" : "Id",
-                        "description": "Id de la vista",
-                        "type": "integer"
-                    },{
-                        "name" : "IdVideos",
-                        "description": "Id del video",
-                        "type": "string"
-                    },{
-                        "name" : "Duración",
-                        "description": "Duración de la vista",
-                        "type": "integer"
-                    },{
-                        "name" : "Ubicacion",
-                        "description": "Lugar desde donde se realizo la vista",
-                        "type": "string"
-                    }, {
-                        "name" : "Fecha",
-                        "description": "Fecha en la que se realizo la vista",
-                        "type": "string"
-                    }],
-                    "responses": {
-                        "200": {
-                            "description": "Operación exitosa",
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id vista": {
-                                                        "type": "integer"
-                                                        },
-                                                    "id video": {
-                                                        "type": "integer"
-                                                        },                                  
-                                                    "duracion": {
-                                                        "type": "integer"
-                                                        },
-                                                    "ubicacion": {
-                                                        "type": "string"
-                                                        },
-                                                    "fecha": {
-                                                        "type": "string"
-                                                    }                                              
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "delete": {
-                        "summary": "Elminar un video",
-                        "description": "Elimina el video cuyo id coincide con el recibido",
-                        "parameters" : [{
-                            "name" : "Id",
-                            "description": "Id del video a borrar",
-                            "type": "integer"
-                        }],
-                        "responses": {
-                            "204": {
-                                "description": "Operación exitosa",
-                                    "content": {
-                                        "application/json": {
-                                            "schema": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer"
-                                                            },
-                                                        "nombre": {
-                                                            "type": "string"
-                                                            },
-                                                        "duracion": {
-                                                            "type": "integer"
-                                                            },
-                                                        "miniatura": {
-                                                            "type": "string"
-                                                            },
-                                                        "usuario": {
-                                                            "type": "string"
-                                                        }                                              
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "put": {
-                            "summary": "Modificar un video",
-                            "description": "Sobreescribe los datos de un video con los enviados como parámetros",
-                            "parameters" : [{
-                                "name" : "Id",
-                                "description": "Id del video",
-                                "type": "integer"
-                            },{
-                                "name" : "Titulo",
-                                "description": "Titulo del video",
-                                "type": "string"
-                            },{
-                                "name" : "Duración",
-                                "description": "Duración del video",
-                                "type": "integer"
-                            },{
-                                "name" : "Miniatura",
-                                "description": "Miniatura del video, codificada en base 64",
-                                "type": "string"
-                            }, {
-                                "name" : "Usuario",
-                                "description": "Nombre del usuario que subió el video",
-                                "type": "string"
-                            }],
-                            "responses": {
-                                "200": {
-                                    "description": "Operación exitosa",
-                                        "content": {
-                                            "application/json": {
-                                                "schema": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "integer"
-                                                                },
-                                                            "nombre": {
-                                                                "type": "string"
-                                                                },
-                                                            "duracion": {
-                                                                "type": "integer"
-                                                                },
-                                                            "miniatura": {
-                                                                "type": "string"
-                                                                },
-                                                            "usuario": {
-                                                                "type": "string"
-                                                            }                                              
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                }
             },
-            "/vistas":{
+            "/videos/{id}/{titulo}/{duracion}/{miniatura}/{usuario}" : {
                 "post": {
-                    "summary": "Realizar vista",
-                    "description": "Agrega una vista al video indicado",
+                    "summary": "Subir video",
+                    "description": "Sube el video que reciba",
                     "parameters" : [{
-                        "name" : "Id",
-                        "description": "Id de la vista",
-                        "type": "integer"
-                    },{
-                        "name" : "IdVideos",
+                        "name" : "id",
                         "description": "Id del video",
-                        "type": "string"
+                        "schema" : {
+                            "type": "integer"
+                        },
+                        "in" : "path",
+                        "required" : "true"
                     },{
-                        "name" : "Duración",
-                        "description": "Duración de la vista",
-                        "type": "integer"
+                        "name" : "titulo",
+                        "description": "titulo del video",
+                        "schema" : {
+                            "type": "string"
+                        },
+                        "in" : "path",
+                        "required" : "true"
                     },{
-                        "name" : "Ubicacion",
-                        "description": "Lugar desde donde se realizo la vista",
-                        "type": "string"
+                        "name" : "duracion",
+                        "description": "Duración del video",
+                        "schema" : {
+                            "type": "integer"
+                        },
+                        "in" : "path",
+                        "required" : "true"
+                    },{
+                        "name" : "miniatura",
+                        "description": "miniatura del video, en base 64",
+                        "schema" : {
+                            "type": "string"
+                        },
+                        "in" : "path",
+                        "required" : "true"
                     }, {
-                        "name" : "Fecha",
-                        "description": "Fecha en la que se realizo la vista",
-                        "type": "string"
+                        "name" : "usuario",
+                        "description": "nombre de usuario de quien sube el video",
+                        "schema" : {
+                            "type": "string"
+                        },
+                        "in" : "path",
+                        "required" : "true"
                     }],
                     "responses": {
                         "200": {
@@ -262,13 +127,49 @@
                             }
                         }
                     },
-                    "delete": {
-                        "summary": "Eliminar ",
-                        "description": "Eliminar video con el id recibido",
+                    "put": {
+                        "summary": "Modificar un video",
+                        "description": "Sobreescribe los datos de un video con los enviados como parámetros",
                         "parameters" : [{
-                            "name" : "Id",
+                            "name" : "id",
                             "description": "Id del video",
-                            "type": "integer"
+                            "schema" : {
+                                "type": "integer"
+                            },
+                            "in" : "path",
+                            "required" : "true"
+                        },{
+                            "name" : "titulo",
+                            "description": "titulo del video",
+                            "schema" : {
+                                "type": "string"
+                            },
+                            "in" : "path",
+                            "required" : "true"
+                        },{
+                            "name" : "duracion",
+                            "description": "Duración del video",
+                            "schema" : {
+                                "type": "integer"
+                            },
+                            "in" : "path",
+                            "required" : "true"
+                        },{
+                            "name" : "miniatura",
+                            "description": "miniatura del video, en base 64",
+                            "schema" : {
+                                "type": "string"
+                            },
+                            "in" : "path",
+                            "required" : "true"
+                        }, {
+                            "name" : "usuario",
+                            "description": "nombre de usuario de quien sube el video",
+                            "schema" : {
+                                "type": "string"
+                            },
+                            "in" : "path",
+                            "required" : "true"
                         }],
                         "responses": {
                             "200": {
@@ -302,30 +203,176 @@
                                     }
                                 }
                             }
-                        },
+                        }
+            },
+            "/videos/{id}" : {
+            "delete": {
+                "summary": "Elminar un video",
+                "description": "Elimina el video cuyo id coincide con el recibido",
+                "parameters" : [{
+                    "name" : "id",
+                    "description": "Id del video a borrar",
+                    "schema" : {
+                        "type" : "integer"
+                    },
+                    "in" : "path",
+                    "required" : "true"
+                }],
+                "responses": {
+                    "204": {
+                        "description": "Operación exitosa",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                    },
+                                                "nombre": {
+                                                    "type": "string"
+                                                    },
+                                                "duracion": {
+                                                    "type": "integer"
+                                                    },
+                                                "miniatura": {
+                                                    "type": "string"
+                                                    },
+                                                "usuario": {
+                                                    "type": "string"
+                                                }                                              
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/vistas/{id}/{idVideo}/{duracion}/{ubicacion}/{fecha}":{
+                "post": {
+                    "summary": "Realizar vista",
+                    "description": "Agrega una vista al video indicado",
+                    "parameters" : [{
+                        "name" : "id",
+                        "description": "Id de la vista",
+                        "in" : "path",
+                        "required" : "true",
+                        "schema" : {
+                            "type" : "integer"
+                        }
+                    },{
+                        "name" : "idVideo",
+                        "description": "Id del video",
+                        "in" : "path",
+                        "required" : "true",
+                        "schema" : {
+                            "type" : "string"
+                        }
+                    },{
+                        "name" : "duracion",
+                        "description": "Duración de la vista",
+                        "in" : "path",
+                        "required" : "true",
+                        "schema" : {
+                            "type" : "integer"
+                        }
+                    },{
+                        "name" : "ubicacion",
+                        "description": "Lugar desde donde se realizo la vista",
+                        "in" : "path",
+                        "required" : "true",
+                        "schema" : {
+                            "type" : "string"
+                        }
+                    }, {
+                        "name" : "fecha",
+                        "description": "Fecha en la que se realizo la vista",
+                        "in" : "path",
+                        "required" : "true",
+                        "schema" : {
+                            "type" : "string"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "Operación exitosa",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id vista": {
+                                                        "type": "integer"
+                                                        },
+                                                    "id video": {
+                                                        "type": "integer"
+                                                        },                                  
+                                                    "duracion": {
+                                                        "type": "integer"
+                                                        },
+                                                    "ubicacion": {
+                                                        "type": "string"
+                                                        },
+                                                    "fecha": {
+                                                        "type": "string"
+                                                    }                                              
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                         "put": {
                             "summary": "Modifica una vista",
                             "description": "Modifica un video con los datos obtenidos por parametros",
                             "parameters" : [{
-                                "name" : "Id",
+                                "name" : "id",
                                 "description": "Id de la vista",
-                                "type": "integer"
+                                "in" : "path",
+                                "required" : "true",
+                                "schema" : {
+                                    "type" : "integer"
+                                }
                             },{
-                                "name" : "IdVideos",
+                                "name" : "idVideo",
                                 "description": "Id del video",
-                                "type": "string"
+                                "in" : "path",
+                                "required" : "true",
+                                "schema" : {
+                                    "type" : "string"
+                                }
                             },{
-                                "name" : "Duración",
+                                "name" : "duracion",
                                 "description": "Duración de la vista",
-                                "type": "integer"
+                                "in" : "path",
+                                "required" : "true",
+                                "schema" : {
+                                    "type" : "integer"
+                                }
                             },{
-                                "name" : "Ubicacion",
+                                "name" : "ubicacion",
                                 "description": "Lugar desde donde se realizo la vista",
-                                "type": "string"
+                                "in" : "path",
+                                "required" : "true",
+                                "schema" : {
+                                    "type" : "string"
+                                }
                             }, {
-                                "name" : "Fecha",
+                                "name" : "fecha",
                                 "description": "Fecha en la que se realizo la vista",
-                                "type": "string"
+                                "in" : "path",
+                                "required" : "true",
+                                "schema" : {
+                                    "type" : "string"
+                                }
                             }],
                             "responses": {
                                 "200": {
@@ -360,16 +407,67 @@
                                     }
                                 }
                             }
-                         
+    
             },
-            "/verVideosXVistas":{
+            "/vistas/{id}" : {
+                "delete": {
+                    "summary": "Eliminar una vista",
+                    "description": "Eliminar la vista con el id recibido",
+                    "parameters" : [{
+                        "name" : "id",
+                        "description": "Id del video",
+                        "schema" : {
+                            "type" : "integer"
+                        },
+                        "required" : "true",
+                        "in" : "path"
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "Operación exitosa",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                        },
+                                                    "nombre": {
+                                                        "type": "string"
+                                                        },
+                                                    "duracion": {
+                                                        "type": "integer"
+                                                        },
+                                                    "miniatura": {
+                                                        "type": "string"
+                                                        },
+                                                    "usuario": {
+                                                        "type": "string"
+                                                    }                                              
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+            },
+            "/verVideosXVistas/{cantMinima}":{
                 "get":{
                     "summary": "Videos con cierta cantidad de visitas",
-                    "description": "Muestra todos los videos con mas vistas que numero recibido",
+                    "description": "Muestra todos los videos con mas vistas que el numero recibido",
                     "parameters":[{
-                        "title": "cantidad minima",
+                        "name": "cantMinima",
                         "description": "cantidad minima de visitas para hacer la busqueda",
-                        "type":"integer"
+                        "schema" : {
+                            "type" : "integer"
+                        },
+                        "required" : "true",
+                        "in" : "path"
                     }],
                     "responses": {
                         "200": {
@@ -443,7 +541,7 @@
                     }
                 }
             },
-            "/verVideosMasLargo":{
+            "/verVideoMasLargo":{
                 "get":{
                     "summary": "Mostrar videos mas largos",
                     "description": "Muestra el o los videos con mayor duracion",

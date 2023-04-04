@@ -17,9 +17,6 @@ app.set('view engine', 'ejs')
 
 let videos:Array<video> = new Array<video>;
 
-let videoTemp:video = new video(0, "1", 54, "imagen Base sesenta y cuatro", new Array<vista>, "usuarioAlpha");
-videos.push(videoTemp);
-
 app.get("/videos", (_req,_res) => {
     _res.json(videos);
   })
@@ -27,7 +24,8 @@ app.get("/videos", (_req,_res) => {
 // subir video
 app.post("/videos/:id/:titulo/:duracion/:miniatura/:usuario", (_req, _res)=>{ 
     let videoASubir: video = new video(Number(_req.params.id), _req.params.titulo, Number(_req.params.duracion), _req.params.miniatura, [], _req.params.usuario)
-    _res.json(videos);   
+    videos.push(videoASubir)
+    _res.json(videoASubir)  
 })
 
 // eliminar video
@@ -36,7 +34,7 @@ app.delete("/videos/:id", (_req,_res) => {
         return item.id == Number(_req.params.id)
     })
     if (p){
-      delete videos[videos.indexOf(p)]
+      videos.splice(videos.indexOf(p), 1)
     }
     _res.status(204).send()
   })
@@ -64,12 +62,11 @@ app.post("/vistas/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) => {
         v = i
       }
     }
-    
     videos[v].listaVistas.push(vistaASubir)
-    _res.json(204).send()
+    _res.json(vistaASubir)
   })
 
-app.listen(1814,()=>{
+app.listen(1815,()=>{
     console.log("Messsi nashe")
 })
 
@@ -87,16 +84,16 @@ app.delete("/vistas/:idVisita", (_req,_res) => {
 })
 
 //modificar vista 
-app.put("/vistas/:idVista/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) =>{
+app.put("/vistas/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) =>{
   let vistaACambiar = new vista(Number(_req.params.id), Number(_req.params.idVideo), Number(_req.params.duracion), _req.params.ubicacion, _req.params.fecha)  
   for(let i = 0; i < videos.length; i++){
       for(let j = 0; j<videos[i].listaVistas.length; j++){
-        if (videos[i].listaVistas[j].idVista == Number(_req.params.idVista)){
+        if (videos[i].listaVistas[j].idVista == Number(_req.params.id)){
           videos[i].listaVistas[j] = vistaACambiar
         }
       }
     }
-    _res.status(204).send()
+    _res.json(vistaACambiar)
   })
 
 
