@@ -4,8 +4,9 @@ import { vista } from "./vista";
 import swaggerUi from 'swagger-ui-express'
 import * as swaggerDocument from './swagger.json'
 
-
 const app: express.Application = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
     res.render('index')
@@ -24,9 +25,8 @@ app.get("/videos", (_req,_res) => {
   })
 
 // subir video
-app.post("/videos", (_req, _res)=>{ 
-    let videoASubir:video = new video(2, "me cago en la cama de mi perro termina sexual(broma masiva)", 789, "imagen Base sesenta y cuatro",new Array<vista>, "usuarioBeta");
-    videos.push(videoASubir); 
+app.post("/videos/:id/:titulo/:duracion/:miniatura/:usuario", (_req, _res)=>{ 
+    let videoASubir: video = new video(Number(_req.params.id), _req.params.titulo, Number(_req.params.duracion), _req.params.miniatura, [], _req.params.usuario)
     _res.json(videos);   
 })
 
@@ -41,33 +41,31 @@ app.delete("/videos/:id", (_req,_res) => {
     _res.status(204).send()
   })
 
-  //modificar titulo
-app.patch("/videos/:id/:titulo", (_req, _res) =>{
+  //modificar video
+app.put("/videos/:id/:titulo/:duracion/:miniatura/:usuario", (_req, _res) =>{
   const p = videos.find(item => {
     return item.id == Number(_req.params.id)
   })
   if (p){
     p.titulo = _req.params.titulo
+    p.duracion = Number(_req.params.duracion)
+    p.miniatura = _req.params.miniatura
+    p.usuario = _req.params.usuario
   }
   _res.json(p); 
   })
 
 //añadir vista
-app.post("/vistas", (_req, _res) => {
-  
-    let vistaTemp3:vista = new vista(0, 2, 60, "Argentina, CABA", "2015-01-13");
-    let vistaTemp4:vista = new vista(1, 2, 60, "Argentina, CABA", "2015-01-13");
+app.post("/vistas/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) => {
+    let vistaASubir = new vista(Number(_req.params.id), Number(_req.params.idVideo), Number(_req.params.duracion), _req.params.ubicacion, _req.params.fecha);
     let v = 0
     for(let i = 0; i < videos.length;i++){
-      if(videos[i].id == vistaTemp3.idVideo){
+      if(videos[i].id == vistaASubir.idVideo){
         v = i
       }
     }
     
-    videos[v].listaVistas.push(vistaTemp3)
-
-    videos[v].listaVistas.push(vistaTemp4)
-
+    videos[v].listaVistas.push(vistaASubir)
     _res.json(204).send()
   })
 
@@ -80,7 +78,7 @@ app.listen(1814,()=>{
 app.delete("/vistas/:idVisita", (_req,_res) => {
   for(let i = 0; i < videos.length; i++){
     for(let j = 0; j < videos[i].listaVistas.length; j++){
-      if(videos[i].listaVistas[j].idVisita == Number(_req.params.idVisita)){
+      if(videos[i].listaVistas[j].idVista == Number(_req.params.idVisita)){
         videos[i].listaVistas.splice(j, 1)
       }
     }
@@ -89,11 +87,12 @@ app.delete("/vistas/:idVisita", (_req,_res) => {
 })
 
 //modificar vista 
-app.patch("/vistas/:idVista/:ubicacion", (_req, _res) =>{
-    for(let i = 0; i < videos.length; i++){
+app.put("/vistas/:idVista/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) =>{
+  let vistaACambiar = new vista(Number(_req.params.id), Number(_req.params.idVideo), Number(_req.params.duracion), _req.params.ubicacion, _req.params.fecha)  
+  for(let i = 0; i < videos.length; i++){
       for(let j = 0; j<videos[i].listaVistas.length; j++){
-        if (videos[i].listaVistas[j].idVisita == Number(_req.params.idVista)){
-          videos[i].listaVistas[j].ubicacion = _req.params.ubicacion;
+        if (videos[i].listaVistas[j].idVista == Number(_req.params.idVista)){
+          videos[i].listaVistas[j] = vistaACambiar
         }
       }
     }
@@ -138,7 +137,7 @@ app.get("/verVistasVideos", (_req, _res) => {
   _res.json(listaItems);
 })
 
-// mostrar video/s con mas vistas
+// mostrar videos con mas vistas
 app.get("/verVideoMasLargo", (_req, _res) => {
   let masLargo: video = new video(-1, "", 0, "", [], "")
   let lista: Array<video> = new Array<video>
