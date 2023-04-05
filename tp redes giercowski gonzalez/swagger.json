@@ -55,7 +55,7 @@
                     "description": "Sube el video que reciba",
                     "parameters" : [{
                         "name" : "id",
-                        "description": "Id del video",
+                        "description": "Id de la vista",
                         "schema" : {
                             "type": "integer"
                         },
