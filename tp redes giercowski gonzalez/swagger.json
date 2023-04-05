@@ -415,7 +415,7 @@
                     "description": "Eliminar la vista con el id recibido",
                     "parameters" : [{
                         "name" : "id",
-                        "description": "Id del video",
+                        "description": "Id de la vista a borrar",
                         "schema" : {
                             "type" : "integer"
                         },
