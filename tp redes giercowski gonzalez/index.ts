@@ -13,97 +13,32 @@ app.get('/', (req, res) => {
     
 })
 
+app.use(express.json())
+
 app.set('view engine', 'ejs')
 
-let videos:Array<video> = new Array<video>;
+export let videos:Array<video> = new Array<video>;
 
-app.get("/videos", (_req,_res) => {
-    _res.json(videos);
-  })
+import { routerVistas } from "./controladores/controladorVista";
+import { routerVideos } from "./controladores/controladorVideo";
 
-// subir video
-app.post("/videos/:id/:titulo/:duracion/:miniatura/:usuario", (_req, _res)=>{ 
-    let videoASubir: video = new video(Number(_req.params.id), _req.params.titulo, Number(_req.params.duracion), _req.params.miniatura, [], _req.params.usuario)
-    videos.push(videoASubir)
-    _res.json(videoASubir)  
-})
-
-// eliminar video
-app.delete("/videos/:id", (_req,_res) => {
-    const p = videos.find(item => {
-        return item.id == Number(_req.params.id)
-    })
-    if (p){
-      videos.splice(videos.indexOf(p), 1)
-    }
-    _res.status(204).send()
-  })
-
-  //modificar video
-app.put("/videos/:id/:titulo/:duracion/:miniatura/:usuario", (_req, _res) =>{
-  const p = videos.find(item => {
-    return item.id == Number(_req.params.id)
-  })
-  if (p){
-    p.titulo = _req.params.titulo
-    p.duracion = Number(_req.params.duracion)
-    p.miniatura = _req.params.miniatura
-    p.usuario = _req.params.usuario
-  }
-  _res.json(p); 
-  })
-
-//añadir vista
-app.post("/vistas/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) => {
-    let vistaASubir = new vista(Number(_req.params.id), Number(_req.params.idVideo), Number(_req.params.duracion), _req.params.ubicacion, _req.params.fecha);
-    let v = 0
-    for(let i = 0; i < videos.length;i++){
-      if(videos[i].id == vistaASubir.idVideo){
-        v = i
-      }
-    }
-    videos[v].listaVistas.push(vistaASubir)
-    _res.json(vistaASubir)
-  })
+app.use(routerVistas)
+app.use(routerVideos)
 
 app.listen(1815,()=>{
-    console.log("Messsi nashe")
+  console.log("Messsi nashe")
 })
 
-//quitar vista
 
-app.delete("/vistas/:idVisita", (_req,_res) => {
-  for(let i = 0; i < videos.length; i++){
-    for(let j = 0; j < videos[i].listaVistas.length; j++){
-      if(videos[i].listaVistas[j].idVista == Number(_req.params.idVisita)){
-        videos[i].listaVistas.splice(j, 1)
-      }
-    }
-  }
-  _res.status(204).send()
-})
-
-//modificar vista 
-app.put("/vistas/:id/:idVideo/:duracion/:ubicacion/:fecha", (_req, _res) =>{
-  let vistaACambiar = new vista(Number(_req.params.id), Number(_req.params.idVideo), Number(_req.params.duracion), _req.params.ubicacion, _req.params.fecha)  
-  for(let i = 0; i < videos.length; i++){
-      for(let j = 0; j<videos[i].listaVistas.length; j++){
-        if (videos[i].listaVistas[j].idVista == Number(_req.params.id)){
-          videos[i].listaVistas[j] = vistaACambiar
-        }
-      }
-    }
-    _res.json(vistaACambiar)
-  })
 
 
 //métodos personalizados
 
 //mostrar videos con cierta cantidad de vistas o más
 
-app.get("/verVideosXVistas/:cantMinima", (_req,_res) => {
+app.get("/videos/verVideosXVistas/:cantMinima", (_req,_res) => {
     let videosXvisitas:Array<video> = new Array<video>
-    for (let i = 0; i < videos.length; i++) {//drakul20
+    for (let i = 0; i < videos.length; i++) {
       if(videos[i].listaVistas.length >= Number(_req.params.cantMinima)){
           videosXvisitas.push(videos[i])
       }
@@ -113,7 +48,7 @@ app.get("/verVideosXVistas/:cantMinima", (_req,_res) => {
 
 //mostrar vistas de los videos
 
-app.get("/verVistasVideos", (_req, _res) => {
+app.get("/videos/verVistasVideos", (_req, _res) => {
   class vistasDeVideos{
     titulo:string;
     cantidadVisitas: Number
@@ -135,7 +70,7 @@ app.get("/verVistasVideos", (_req, _res) => {
 })
 
 // mostrar videos con mas vistas
-app.get("/verVideoMasLargo", (_req, _res) => {
+app.get("/videos/verVideoMasLargo", (_req, _res) => {
   let masLargo: video = new video(-1, "", 0, "", [], "")
   let lista: Array<video> = new Array<video>
   for(let i = 0; i < videos.length; i ++){
