@@ -28,7 +28,7 @@ routerVistas.delete("/vistas/:idVista", (_req,_res) => {
     })
 })
 
-//modificar vista LO SUBE DOS VECES?
+//modificar vista
 routerVistas.put("/vistas/:id", (_req, _res) =>{
   let vistaACambiar = new vista(Number(_req.params.id), Number(_req.body.idVideo), Number(_req.body.duracion), _req.body.ubicacion, _req.body.fecha)  
   vistaDB.modificarVista(vistaACambiar).then((v)=>{
