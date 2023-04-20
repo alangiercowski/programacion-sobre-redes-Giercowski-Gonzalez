@@ -9,67 +9,87 @@ const { MongoClient } = require("mongodb");
 const url = "mongodb://localhost:27017/Vistas";
 const client = new MongoClient(url)
 
+//añadir vista
+
 async function subirVista(vistaASubir: vista) {
   try {
     const database = client.db("Vistas");
     const videos = database.collection("video");
-    //var videoAux: video = new video(-1, "", 0, "", [], "")
-    
-    /*await videos.find().forEach(function(document: any){
-      if(vistaASubir.idVideo == document.id){
-        videoAux = new video(document.idVista, document.titulo, document.duracion, document.minitura, document.listaVistas, document.usuario)
-        videoAux.listaVistas.push(vistaASubir)
-      }
-    })
-    const documentVideo = {
-      id: videoAux.id,
-      titulo: videoAux.titulo,
-      duracion: videoAux.duracion,
-      miniatura: videoAux.miniatura,
-      listaVistas: videoAux.listaVistas,
-      usuario: videoAux.usuario
-    }*/console.log("sellego2")
     const query = JSON.parse('{"$push":{"listaVistas":' + JSON.stringify(vistaASubir) +'}}')
-    console.log("sellego")
-    videos.findOneAndReplace({id: vistaASubir.idVideo}, query);
-    
+    videos.findOneAndUpdate({id: vistaASubir.idVideo}, query);
     }
     finally {
   }
 }
 
-//añadir vista
 routerVistas.post("/vistas", (_req, _res)=>{ 
-  let vistaASubir = new vista(Number(_req.body.id), Number(_req.body.idVideo), Number(_req.body.duracion), _req.body.ubicacion, _req.body.fecha);
+  let vistaASubir = new vista(Number(_req.body.idVista), Number(_req.body.idVideo), Number(_req.body.duracion), _req.body.ubicacion, _req.body.fecha);
   subirVista(vistaASubir).then((v)=>{
       _res.json(v);
     })
 })
 
-
-
 //quitar vista
 
-routerVistas.delete("/vistas/:idVista", (_req,_res) => {
-  for(let i = 0; i < videos.length; i++){
-    for(let j = 0; j < videos[i].listaVistas.length; j++){
-      if(videos[i].listaVistas[j].idVista == Number(_req.params.idVista)){
-        videos[i].listaVistas.splice(j, 1)
-      }
+export async function quitarVista(idAborrar: Number){
+  try {
+    let vistaABorrar = new vista(-1, -1, -1, "", "");
+    const database = client.db('Vistas');
+    const videos = database.collection('video');
+    await videos.find().forEach(function(document: any){
+      for(let i=0; i<document.listaVistas.length; i++){
+        if(document.listaVistas[i].idVista == idAborrar){
+          vistaABorrar = document.listaVistas[i];
+          console.log(vistaABorrar);
+        }
+        const query = JSON.parse('{"$pull":{"listaVistas": {"idVista": '+ JSON.stringify(idAborrar) +'}}}')
+        videos.findOneAndUpdate({id: vistaABorrar.idVideo}, query);
     }
+  })
+
+  } finally {
   }
-  _res.status(204).send()
+
+}
+
+routerVistas.delete("/vistas/:idVista", (_req,_res) => {
+    quitarVista(Number(_req.params.idVista)).then((v)=>{
+      _res.json(v);
+    })
 })
 
-//modificar vista 
-routerVistas.put("/vistas/:id", (_req, _res) =>{
-  let vistaACambiar = new vista(Number(_req.params.id), Number(_req.body.idVideo), Number(_req.body.duracion), _req.body.ubicacion, _req.body.fecha)  
-  for(let i = 0; i < videos.length; i++){
-      for(let j = 0; j<videos[i].listaVistas.length; j++){
-        if (videos[i].listaVistas[j].idVista == Number(_req.params.id)){
-          videos[i].listaVistas[j] = vistaACambiar
+//modificar vista LO SUBE DOS VECES?
+
+export async function modificarVista(vistaModificada: vista){
+  try{
+    const database = client.db('Vistas');
+    const videos = database.collection('video');
+    let idVideoOriginal=-1
+    await videos.find().forEach(function(document: any){
+      for(let i=0; i<document.listaVistas.length; i++){
+        if(document.listaVistas[i].idVista == vistaModificada.idVista){
+          idVideoOriginal = document.listaVistas[i].idVideo;
         }
       }
-    }
+      if(idVideoOriginal == vistaModificada.idVideo){
+        const query = JSON.parse('{"$set":{"listaVistas": '+ JSON.stringify([vistaModificada]) +'}}')
+        videos.findOneAndUpdate({id: vistaModificada.idVideo}, query);
+      }
+      else if(idVideoOriginal != vistaModificada.idVideo && idVideoOriginal != -1){
+        const queryQuitar = JSON.parse('{"$pull":{"listaVistas": {"idVista": '+ JSON.stringify(vistaModificada.idVista) +'}}}')
+        videos.findOneAndUpdate({id: idVideoOriginal}, queryQuitar);
+        const query = JSON.parse('{"$push":{"listaVistas":' + JSON.stringify(vistaModificada) +'}}')
+        videos.findOneAndUpdate({id: vistaModificada.idVideo}, query);
+      }
+    })
+
+  } finally {
+  }
+}
+
+routerVistas.put("/vistas/:id", (_req, _res) =>{
+  let vistaACambiar = new vista(Number(_req.params.id), Number(_req.body.idVideo), Number(_req.body.duracion), _req.body.ubicacion, _req.body.fecha)  
+  modificarVista(vistaACambiar).then((v)=>{
     _res.json(vistaACambiar)
   })
+})

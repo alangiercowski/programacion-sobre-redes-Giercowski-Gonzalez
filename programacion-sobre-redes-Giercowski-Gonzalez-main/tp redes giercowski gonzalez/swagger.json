@@ -467,21 +467,12 @@
                                             "items": {
                                             "type": "object",
                                             "properties": {
-                                                "id": {
+                                                "titulo": {
+                                                    "type": "string"
+                                                    },
+                                                "cantVistas": {
                                                     "type": "integer"
-                                                    },
-                                                "nombre": {
-                                                    "type": "string"
-                                                    },
-                                                "duracion": {
-                                                    "type": "integer"
-                                                    },
-                                                "miniatura": {
-                                                    "type": "string"
-                                                    },
-                                                "usuario": {
-                                                    "type": "string"
-                                                }                                              
+                                                }                                           
                                             }
                                         }
                                     }
@@ -563,9 +554,9 @@
                 },
                 "vista":{
                     "type": "object",
-                    "required": ["id", "idVideo", "duracion", "ubicacion", "fecha"],
+                    "required": ["idVista", "idVideo", "duracion", "ubicacion", "fecha"],
                     "properties": {
-                        "id": {
+                        "idVista": {
                             "type": "number"
                         },
                         "idVideo": {

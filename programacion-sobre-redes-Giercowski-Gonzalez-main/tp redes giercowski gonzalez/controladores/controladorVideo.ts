@@ -16,7 +16,7 @@ export async function getVideos(){
     await videos.find().forEach(function(document: any){
       var listaDeVistas: Array<vista> = new Array
       for(let i=0; i<document.listaVistas.length; i++){
-        let vistaRePuta = new vista(Number(document.listaVistas[i].id), Number(document.listaVistas[i].idVideo), Number(document.listaVistas[i].duracion), document.listaVistas[i].ubicacion, document.listaVistas[i].fecha)
+        let vistaRePuta = new vista(Number(document.listaVistas[i].idVista), Number(document.listaVistas[i].idVideo), Number(document.listaVistas[i].duracion), document.listaVistas[i].ubicacion, document.listaVistas[i].fecha)
         listaDeVistas.push(vistaRePuta)
       }
       let videoAux: video = new video(Number(document.id), document.titulo, Number(document.duracion), document.miniatura, listaDeVistas, document.usuario)
@@ -24,7 +24,6 @@ export async function getVideos(){
     })
     return listaDeVideos
   } finally {
-    await client.close();
   }
 
 }
@@ -56,7 +55,6 @@ async function subirVideo(videoASubir: video) {
     const result = await videos.insertOne(document);
     console.log(`A document was inserted with the _id: ${result.insertedId}`);
   } finally {
-    await client.close();
   }
 }
 routerVideos.post("/videos", (_req, _res)=>{ 
@@ -67,26 +65,22 @@ routerVideos.post("/videos", (_req, _res)=>{
 })
 
 // eliminar video
-export async function deleteVideo(idAborrar: Number){
+export async function quitarVideo(idAborrar: Number){
   try {
     const database = client.db('Vistas');
     const videos = database.collection('video');
-    console.log("antes") 
     await videos.find().forEach(function(){
       const query = { id: idAborrar };
-      console.log("durante")
       videos.findOneAndDelete(query);
-      console.log("despues")
     })
 
   } finally {
-    //await client.close();
   }
 
 }
 
 routerVideos.delete("/videos/:id", (_req,_res) => {
-    deleteVideo(Number(_req.params.id)).then((v)=>{
+    quitarVideo(Number(_req.params.id)).then((v)=>{
       _res.json(v);
     })
 })
