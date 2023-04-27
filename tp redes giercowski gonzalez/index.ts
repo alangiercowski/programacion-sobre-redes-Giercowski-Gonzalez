@@ -22,10 +22,12 @@ export let videos:Array<video> = new Array<video>;
 import { routerVistas } from "./controladores/controladorVista";
 import { routerVideos } from "./controladores/controladorVideo";
 import { routerPersonalizados } from "./controladores/controladorPerzonalizadas";
+import { routerUsuario } from "./controladores/controladorUsuario";
 
 app.use(routerVistas)
 app.use(routerVideos)
 app.use(routerPersonalizados)
+app.use(routerUsuario)
 
 app.listen(1815,()=>{
   console.log("Messsi nashe")
