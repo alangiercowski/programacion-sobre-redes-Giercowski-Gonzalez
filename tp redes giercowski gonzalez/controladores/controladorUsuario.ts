@@ -3,6 +3,9 @@ import { controladorUsuarioDB } from "./controladorDB/controladorUsuarioDB";
 import { MongoClient } from "mongodb";
 import { Router } from "express";
 const { createHash } = require('crypto');
+const jwt = require('jsonwebtoken');
+import { SECRET_KEY } from "../JWT/key";
+const claveSecureta = SECRET_KEY
 
 const url = "mongodb://localhost:27017/Vistas";
 const client = new MongoClient(url)
@@ -23,3 +26,17 @@ routerUsuario.post("/usuarios", async (_req, _res)=>{
         _res.send(204)
     })
 })
+
+routerUsuario.post("/usuarios/login", async (_req, _res)=>{
+    if(await usuarioDB.login(_req.body.nombreUsuario, _req.body.contraseña)){
+        let data = {
+            nombre: _req.body.nombreUsuario
+          }
+        let tokenJWT = jwt.sign(data, claveSecureta)
+        _res.send(tokenJWT)
+    }
+    else{
+        _res.send("usuario no encontrado")
+    }
+})
+
