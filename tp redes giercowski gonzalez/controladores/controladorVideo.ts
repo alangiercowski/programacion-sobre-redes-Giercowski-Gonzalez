@@ -4,7 +4,7 @@ import { videos } from "..";
 import { vista } from "../vista";
 import { controladorVideoDB } from "./controladorDB/controladorVideoDB";
 import { verify } from "crypto";
-import { SECRET_KEY } from "../JWT/key";
+import { SECRET_KEY, verifyToken } from "../JWT/key";
 
 
 const { MongoClient } = require("mongodb");
@@ -16,12 +16,12 @@ var videoDB: controladorVideoDB = new controladorVideoDB(url, database, database
 
 export const routerVideos = Router()
 
+routerVideos.use("/videos", verifyToken)
+
 routerVideos.get("/videos", (_req,_res) => {
-  console.log(_req.header)
   videoDB.getVideos().then((v)=>{
     _res.json(v);
   })
-    
 })
 
 

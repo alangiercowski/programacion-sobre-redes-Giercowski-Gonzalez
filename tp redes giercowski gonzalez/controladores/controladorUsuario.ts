@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 import { Router } from "express";
 const { createHash } = require('crypto');
 const jwt = require('jsonwebtoken');
-import { SECRET_KEY } from "../JWT/key";
+import { SECRET_KEY, verifyToken } from "../JWT/key";
 const claveSecureta = SECRET_KEY
 
 const url = "mongodb://localhost:27017/Vistas";
@@ -19,6 +19,8 @@ export const routerUsuario = Router()
 function hash(string: string) {
     return createHash('sha256').update(string).digest('hex');
   }
+
+routerUsuario.use("/usuarios", verifyToken)
   
 routerUsuario.post("/usuarios", async (_req, _res)=>{
     let usuarioAsubir: usuario = new usuario(_req.body.id,_req.body.mail,_req.body.nombreUsuario,await hash(String(_req.body.contraseña)));
@@ -32,11 +34,11 @@ routerUsuario.post("/usuarios/login", async (_req, _res)=>{
         let data = {
             nombre: _req.body.nombreUsuario
           }
-        let tokenJWT = jwt.sign(data, claveSecureta)
+        let tokenJWT = jwt.sign(data, claveSecureta, {expiresIn: "2h"})
         _res.send(tokenJWT)
     }
     else{
         _res.send("usuario no encontrado")
-    }
+    } 
 })
 

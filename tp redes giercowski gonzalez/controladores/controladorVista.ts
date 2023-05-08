@@ -3,6 +3,7 @@ import { Router } from "express";
 import { videos } from "..";
 import { video } from "../video";
 import { controladorVistaDB } from "./controladorDB/controladorVistaDB";
+import { verifyToken } from "../JWT/key";
 
 export const routerVistas = Router()
 
@@ -12,6 +13,8 @@ const client = new MongoClient(url)
 const database = client.db("Vistas");
 
 var vistaDB: controladorVistaDB = new controladorVistaDB(url, database, database.collection("vista"))
+
+routerVistas.use("/vistas", verifyToken)
 
 //añadir vista
 routerVistas.post("/vistas", (_req, _res)=>{ 

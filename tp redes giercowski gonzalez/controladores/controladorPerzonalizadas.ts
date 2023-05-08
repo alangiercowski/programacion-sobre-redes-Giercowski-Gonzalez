@@ -3,6 +3,7 @@ import { video } from "../video";
 import { Router } from "express";
 import { videos } from "..";
 import { controladorPersonalizadoDB } from "./controladorDB/controladorPersonalizadoDB";
+import { verifyToken } from "../JWT/key";
 
 export const routerPersonalizados = Router()
 
@@ -12,6 +13,8 @@ const client = new MongoClient(url)
 const database = client.db("Vistas");
 
 var personalizadoDB: controladorPersonalizadoDB = new controladorPersonalizadoDB(url, database, database.collection("video"))
+
+routerPersonalizados.use("/videos", verifyToken)
 
 //mostrar videos con cierta cantidad de vistas o más
 routerPersonalizados.get("/videos/verVideosXVistas/:cantMinima", (_req,_res) => {
