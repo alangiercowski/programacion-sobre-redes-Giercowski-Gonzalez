@@ -23,7 +23,6 @@ function hash(string: string) {
   return createHash("sha256").update(string).digest("hex");
 }
 
-routerUsuario.use("/usuarios", verifyToken);
 
 routerUsuario.post("/usuarios", async (_req, _res) => {
   let usuarioAsubir: usuario = new usuario(
